@@ -14,9 +14,14 @@ func New(http int, code, msg string) *AppError {
 	return &AppError{HTTP: http, Code: code, Message: msg}
 }
 
+// With returns a shallow copy of the error with a replaced message.
+//
+// The package-level sentinels (Validation, Conflict, …) are shared singletons
+// reused across requests, so With must never mutate the receiver — otherwise
+// one request's customised message leaks into every later request that returns
+// the same sentinel until the process restarts (cross-request error bleed).
 func (e *AppError) With(msg string) *AppError {
-	e.Message = msg
-	return e
+	return &AppError{HTTP: e.HTTP, Code: e.Code, Message: msg}
 }
 
 func (e *AppError) Fmt(format string, args ...any) *AppError {
