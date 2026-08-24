@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><polyline points='1,1 6,6 11,1' fill='none' stroke='%23999' stroke-width='1.6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+html, body, #app { min-height: 100%; }
+body { background: #0B1220; }
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold transition;
+}
+.btn-brass { @apply btn bg-brass text-ink hover:brightness-110; }
+.btn-ghost { @apply btn border border-white/15 text-paper hover:bg-white/5; }
+.btn-danger { @apply btn bg-danger text-white hover:brightness-110; }
+.field { @apply w-full rounded-md border border-black/10 bg-white px-3 py-2 text-inktext outline-none focus:ring-2 focus:ring-brass; }
+.card { @apply rounded-2xl bg-paper text-inktext shadow-[0_20px_50px_rgba(0,0,0,.25)]; }
+.label { @apply mb-1 block text-xs font-semibold tracking-wide text-inktext/60; }
