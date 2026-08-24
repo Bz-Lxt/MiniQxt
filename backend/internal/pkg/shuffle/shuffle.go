@@ -1,25 +1,15 @@
 package shuffle
 
-import (
-	"math/rand"
-	"sync"
-)
-
-type orderSource struct {
-	mu  sync.Mutex
-	rng *rand.Rand
-}
-
-func (s *orderSource) forSeed(seed int64) *rand.Rand {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	s.rng.Seed(seed)
-	return s.rng
-}
-
-var sharedOrderSource = orderSource{rng: rand.New(rand.NewSource(1))}
+import "math/rand"
 
 // Order returns a deterministic permutation of [0, n).
+//
+// A fresh *rand.Rand is created for every call so that concurrent
+// invocations with the same seed produce byte-identical permutations
+// without any shared mutable state or lock contention. Reusing a single
+// *rand.Rand across goroutines (even under a mutex) lets one Shuffle
+// call corrupt the stream of another, which made the same shuffle_seed
+// yield different question/option order under concurrent paper renders.
 func Order(seed int64, n int) []int {
 	idx := make([]int, n)
 	for i := 0; i < n; i++ {
@@ -28,7 +18,7 @@ func Order(seed int64, n int) []int {
 	if n < 2 {
 		return idx
 	}
-	r := sharedOrderSource.forSeed(seed)
+	r := rand.New(rand.NewSource(seed))
 	r.Shuffle(n, func(i, j int) { idx[i], idx[j] = idx[j], idx[i] })
 	return idx
 }
