@@ -7,10 +7,8 @@ import (
 	"github.com/miniqxt/backend/internal/pkg/response"
 )
 
-var roleAllow = map[string]struct{}{}
-
 func Roles(roles ...string) gin.HandlerFunc {
-	allow := roleAllow
+	allow := make(map[string]struct{}, len(roles))
 	for _, r := range roles {
 		allow[r] = struct{}{}
 	}
